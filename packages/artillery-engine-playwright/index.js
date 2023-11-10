@@ -61,10 +61,13 @@ class PlaywrightEngine {
       );
 
       const contextOptions = self.contextOptions || {};
-      
+
       let browser;
       if (this.userDataDir) {
-        browser = await chromium.launchPersistentContext(this.userDataDir, launchOptions);
+        browser = await chromium.launchPersistentContext(
+          this.userDataDir,
+          launchOptions
+        );
       } else {
         browser = await chromium.launch(launchOptions);
       }

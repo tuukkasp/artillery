@@ -65,19 +65,21 @@ class EnsurePlugin {
         global.artillery.globalEvents.emit('checks', checkTests);
 
         checkTests
-          .sort((a, b) => (a.result < b.result) ? 1 : -1)
+          .sort((a, b) => (a.result < b.result ? 1 : -1))
           .forEach((check) => {
-          if (check.result !== 1) {
-            global.artillery.log(
-              `${chalk.red('fail')}: ${check.original}${check.strict ? '' : ' (optional)'}`
-            );
-            if (check.strict) {
-              global.artillery.suggestedExitCode = 1;
+            if (check.result !== 1) {
+              global.artillery.log(
+                `${chalk.red('fail')}: ${check.original}${
+                  check.strict ? '' : ' (optional)'
+                }`
+              );
+              if (check.strict) {
+                global.artillery.suggestedExitCode = 1;
+              }
+            } else {
+              global.artillery.log(`${chalk.green('ok')}: ${check.original}`);
             }
-          } else {
-            global.artillery.log(`${chalk.green('ok')}: ${check.original}`);
-          }
-        });
+          });
       }
     });
   }
