@@ -543,7 +543,7 @@ class PlatformLambda {
         this.functionName
       );
       throw new Error(
-        `Timeout waiting for lambda function to be ready for invocation`
+        'Timeout waiting for lambda function to be ready for invocation'
       );
     }
 
@@ -706,7 +706,7 @@ class PlatformLambda {
 
     if (!ok) {
       debug('Time out waiting for SQS queue:', queueName);
-      throw new Error(`SQS queue could not be created`);
+      throw new Error('SQS queue could not be created');
     }
 
     return sqsQueueUrl;
