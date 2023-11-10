@@ -8,6 +8,7 @@ class PlaywrightEngine {
 
     this.config = script.config?.engines?.playwright || {};
     this.processor = script.config.processor || {};
+    this.userDataDir = this.config.userDataDir || {};
     this.launchOptions = this.config.launchOptions || {};
     this.contextOptions = this.config.contextOptions || {};
 
@@ -60,8 +61,13 @@ class PlaywrightEngine {
       );
 
       const contextOptions = self.contextOptions || {};
-
-      const browser = await chromium.launch(launchOptions);
+      
+      let browser;
+      if (this.userDataDir) {
+        browser = await chromium.launchPersistentContext(this.userDataDir, launchOptions);
+      } else {
+        browser = await chromium.launch(launchOptions);
+      }
       debug('browser created');
       const context = await browser.newContext(contextOptions);
 
