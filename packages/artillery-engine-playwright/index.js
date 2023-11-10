@@ -8,7 +8,7 @@ class PlaywrightEngine {
 
     this.config = script.config?.engines?.playwright || {};
     this.processor = script.config.processor || {};
-    this.userDataDir = this.config.userDataDir || {};
+    this.userDataDir = this.config.userDataDir || "";
     this.launchOptions = this.config.launchOptions || {};
     this.contextOptions = this.config.contextOptions || {};
 
@@ -63,16 +63,17 @@ class PlaywrightEngine {
       const contextOptions = self.contextOptions || {};
 
       let browser;
-      if (this.userDataDir) {
-        browser = await chromium.launchPersistentContext(
-          this.userDataDir,
+      let context;
+      if (self.userDataDir) {
+        context = await chromium.launchPersistentContext(
+          self.userDataDir,
           launchOptions
         );
       } else {
         browser = await chromium.launch(launchOptions);
+        debug('browser created');
+        context = await browser.newContext(contextOptions);
       }
-      debug('browser created');
-      const context = await browser.newContext(contextOptions);
 
       context.setDefaultNavigationTimeout(self.defaultNavigationTimeout);
       context.setDefaultTimeout(self.defaultTimeout);
@@ -223,7 +224,7 @@ class PlaywrightEngine {
         }
       } finally {
         await context.close();
-        await browser.close();
+        browser && await browser.close();
       }
     };
   }
